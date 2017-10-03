@@ -1,8 +1,8 @@
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-$VeeamBackupJobName = "Switzerland Backup"
+$VeeamBackupJobName = "Everyone Backup"
 $VeeamRepository = "MailBackup"
-$OrgUnit = "OU=CH,DC=ACME,DC=local"                                      
+$OrgUnit = "DC=ACME,DC=local"                                      
 
 $org = Get-VBOOrganization                                         # Retruns Exchange Organization
 if ($org -eq $null) {
@@ -27,21 +27,32 @@ Catch
 }
 
 # Exchange Powershell call - Return all Exchange Mailboex under the Organitional Unit $OrgUnit defined above.
-$mbxs = Get-Mailbox -OrganizationalUnit $OrgUnit -ResultSize Unlimited
+Try
+{
+    $mbxs = Get-Mailbox -OrganizationalUnit $OrgUnit -ResultSize Unlimited
+}
+Catch
+{
+    Write-Host "No mailboxes within $OrgUnit defined!"
+    Exit 1
+}
 
 $FinalList = @()
 
 #Nested for loop to compare the contents of the Exchange list vs. the Get-VBOOrg..list. Only add matches based
 #on email address.
+$i=1
 ForEach ($MailBox in $MailBoxes) {
+  Write-Progress -Activity "Parsing Mailboxes" -status "Mailbox $Mailbox.Email" -percentComplete ($i / $Mailboxes.count * 100)
   ForEach ($mbx in $mbxs) {
-
      if ($MailBox.Email -match $mbx.EmailAddresses[0].AddressString ) {
-         Write-Host $mbx.EmailAddresses[0].AddressString
+#         Write-Host $mbx.EmailAddresses[0].AddressString
          $FinalList += @($MailBox)
      }
   }
+  $i=$i+1
 }
+Write-Progress -Activity "Parsing Mailboxes" -Completed
 
 If ($JobId = Get-VBOJob -Name $VeeamBackupJobName) {
     write-host "Job Exists! Updating Job"
@@ -51,4 +62,4 @@ If ($JobId = Get-VBOJob -Name $VeeamBackupJobName) {
 }
 
 
-Write-Host "Number of Mailboxes in the OU $OrgUnit = " $mbxs.count
+Write-Host "Number of Mailboxes in the Organizational Unit $OrgUnit = " $mbxs.count
