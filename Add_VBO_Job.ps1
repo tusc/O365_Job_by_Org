@@ -1,12 +1,12 @@
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-$VeeamBackupJobName = "Brazil Backup"
+$VeeamBackupJobName = "Switzerland Backup"
 $VeeamRepository = "MailBackup"
-$OrgUnit = "OU=BR,DC=ACME,DC=local"                                      
+$OrgUnit = "OU=CH,DC=ACME,DC=local"                                      
 
 $org = Get-VBOOrganization                                         # Retruns Exchange Organization
 if ($org -eq $null) {
-    Write-host "Exchange organization $org does not exist!"
+    Write-host "No Exchange organization is defined!"
     exit 1
 }
 $repository = Get-VBORepository -Name $VeeamRepository             # Veeam O365 Repository
@@ -22,7 +22,7 @@ Try
 }
 Catch
 {
-    Write-Host "Organization ($OrgUnit) does not exist!"
+    Write-Host "No mailboxes defined!"
     Exit 1
 }
 
