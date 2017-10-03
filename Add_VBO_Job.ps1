@@ -1,14 +1,30 @@
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-$VeeamBackupJobName = "ABC Backup"
+$VeeamBackupJobName = "Brazil Backup"
 $VeeamRepository = "MailBackup"
-$OrgUnit = "OU=BR,DC=ACME,DC=local"                                # This example searches for users located in Brazil.
+$OrgUnit = "OU=BR,DC=ACME,DC=local"                                      
 
 $org = Get-VBOOrganization                                         # Retruns Exchange Organization
+if ($org -eq $null) {
+    Write-host "Exchange organization $org does not exist!"
+    exit 1
+}
 $repository = Get-VBORepository -Name $VeeamRepository             # Veeam O365 Repository
+if ($repository -eq $null) {
+    Write-host "Repository $VeeamRepository does not exist."
+    exit 1
+}
 
 # O365 PowerShell call - Return all Exchange Mailboxes
-$MailBoxes = Get-VBOOrganizationMailbox -Organization $org
+Try
+{
+    $MailBoxes = Get-VBOOrganizationMailbox -Organization $org
+}
+Catch
+{
+    Write-Host "Organization ($OrgUnit) does not exist!"
+    Exit 1
+}
 
 # Exchange Powershell call - Return all Exchange Mailboex under the Organitional Unit $OrgUnit defined above.
 $mbxs = Get-Mailbox -OrganizationalUnit $OrgUnit -ResultSize Unlimited
@@ -33,5 +49,6 @@ If ($JobId = Get-VBOJob -Name $VeeamBackupJobName) {
 } else {
     $results = Add-VBOJob -Name  $VeeamBackupJobName -Organization $org -Repository $repository -SelectedMailboxes $FinalList
 }
+
 
 Write-Host "Number of Mailboxes in the OU $OrgUnit = " $mbxs.count
