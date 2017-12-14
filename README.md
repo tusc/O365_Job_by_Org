@@ -26,4 +26,4 @@ Powershell to create Veeam Backup O365 jobs with an exclusion list by Organizati
 
 This script allows you to create a Veeam Office 365 backup job with an exclusion list based on Organizational unit. This comes in handy when you want to define a job with an exlucsion of users in a given Exchange organization and not having to click hundreds of user accounts from the GUI.
 
-The script, Add_VBO_Job.ps1,  builds a list of mailboxes that are then passed to the  Add-VBOJob cmdlet for creating a new job. If the job already exists it updates it with Set-VBOJob.
+The script, Excl_VBO_Job.ps1, builds a list of mailboxes to exclude that are then passed to the  Add-VBOJob cmdlet for creating a new job. If the job already exists it updates it with Set-VBOJob.
