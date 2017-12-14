@@ -14,9 +14,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Project Notes
 **Author:** Carlos Talbot (@tusc00)
 
-
+# Add_VBO_Job.ps1
 Powershell to create Veeam Backup O365 jobs by Organizational unit.
 
 This script allows you to create a Veeam Office 365 backup job based on Organizational unit. This comes in handy when you want to define a job based on a subset of the users in a given Exchange organization without having to click hundreds of user accounts from the GUI.
+
+The script, Add_VBO_Job.ps1,  builds a list of mailboxes that are then passed to the  Add-VBOJob cmdlet for creating a new job. If the job already exists it updates it with Set-VBOJob.
+
+# Excl_VBO_Job.ps1
+Powershell to create Veeam Backup O365 jobs with an exclusion list by Organizational unit.
+
+This script allows you to create a Veeam Office 365 backup job with an exclusion list based on Organizational unit. This comes in handy when you want to define a job with an exlucsion of users in a given Exchange organization and not having to click hundreds of user accounts from the GUI.
 
 The script, Add_VBO_Job.ps1,  builds a list of mailboxes that are then passed to the  Add-VBOJob cmdlet for creating a new job. If the job already exists it updates it with Set-VBOJob.
